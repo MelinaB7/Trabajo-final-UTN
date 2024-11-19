@@ -37,4 +37,4 @@ Este proyecto es una aplicación web para una gestion de inventario, desarrollad
 - `GET /api/producto/` - Obtiene todos los productos.
 - `POST /api/producto/`- Crea un nuevo producto.
 - `PUT /api/producto/:id` - Edita un producto por ID.
-- `DELETE /api/hechizos/:id` - Elimina un producto por ID.
+- `DELETE /api/producto/:id` - Elimina un producto por ID.
