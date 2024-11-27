@@ -4,7 +4,7 @@ import { Navbar, Nav, Button, Container } from "react-bootstrap";
 import { useAuth } from "../api/authcontext";
 
 const Menu = () => {
-  const { isAuthenticated, logout } = useAuth(); // Obtenemos el estado de autenticación
+  const { isAuthenticated, logout } = useAuth();
 
   const handleLogout = () => {
     logout();

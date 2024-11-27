@@ -1,10 +1,9 @@
 const { default: mongoose } = require("mongoose");
 const Producto = require("../models/productoModel");
 
-console.log(Producto); // Asegúrate de que esto imprime la función del modelo
+console.log(Producto);
 
-
-// Obtener todos 
+// Obtener todos
 const getAllProductos = async (req, res) => {
   try {
     const productos = await Producto.find();
@@ -18,11 +17,15 @@ const getAllProductos = async (req, res) => {
 
 // Crear un nuevo
 const createProducto = async (req, res) => {
-  const { nombre, descripcion, precio, cantidad  } = req.body;
-  const imagenPath = req.file ? req.file.filename : ""; 
+  const { nombre, descripcion, precio, cantidad } = req.body;
+  const imagenPath = req.file ? req.file.filename : "";
 
-  // Validar que los datos sean válidos
-  if (!nombre || isNaN(parseInt(cantidad)) || !descripcion || isNaN(parseInt(precio))  ) {
+  if (
+    !nombre ||
+    isNaN(parseInt(cantidad)) ||
+    !descripcion ||
+    isNaN(parseInt(precio))
+  ) {
     return res.status(400).send("Todos los campos son obligatorios");
   }
 
@@ -32,7 +35,7 @@ const createProducto = async (req, res) => {
       precio: parseInt(precio),
       descripcion,
       cantidad: parseInt(cantidad),
-      //imagen : imagenPath,
+      imagen: imagenPath,
     });
     await nuevoProducto.save();
     //res.status(303).redirect("/api/producto");
@@ -43,36 +46,53 @@ const createProducto = async (req, res) => {
   }
 };
 
-
 // Actualizar producto
 const updateProducto = async (req, res) => {
-  console.log("Datos recibidos: ", req.body); 
-
   const { nombre, descripcion, precio, cantidad } = req.body;
-  console.log(nombre, descripcion, precio, cantidad); 
-  const imagenPath = req.file ? req.file.filename: '';
+  const imagenPath = req.file ? req.file.filename : null;
 
-  /* Validar que los datos sean válidos*/
-  if (!nombre || isNaN(parseInt(precio)) || !descripcion || isNaN(parseInt(cantidad)) ) {
-    return res.status(400).send("Todos los campos son obligatorios y el precio y cantidad deben ser números");
+  if (
+    !nombre ||
+    isNaN(parseInt(precio)) ||
+    !descripcion ||
+    isNaN(parseInt(cantidad))
+  ) {
+    return res
+      .status(400)
+      .send(
+        "Todos los campos son obligatorios y el precio y cantidad deben ser números"
+      );
   }
   // Obtener y limpiar el ID producto
-const productoId = req.params.id.trim(); //Eliminar espacios 
-console.log("ID del producto", productoId);
+  const productoId = req.params.id.trim();
+  console.log("ID del producto", productoId);
 
-// Validar que el ID sea valido
-if (!mongoose.Types.ObjectId.isValid(productoId)) {
-  return res.status(400).send("ID de producto no válido");
-}
+  // Validar que el ID sea valido
+  if (!mongoose.Types.ObjectId.isValid(productoId)) {
+    return res.status(400).send("ID de producto no válido");
+  }
   try {
-    const productoActualizado = await Producto.findByIdAndUpdate(productoId, {
+    let datosProducto = {
       nombre,
       precio: parseInt(precio),
       descripcion,
       cantidad: parseInt(cantidad),
-     // imagen: imagenPath,
-    }, { new: true });
+      // imagen: imagenPath,
+    };
 
+    if (imagenPath != null) {
+      datosProducto.imagen = imagenPath;
+    }
+
+    const productoActualizado = await Producto.findByIdAndUpdate(
+      productoId,
+      datosProducto,
+      { new: true }
+    );
+
+    if (!productoActualizado) {
+      return res.status(404).send("Producto no encontrado");
+    }
     if (!productoActualizado) {
       return res.status(404).send("Producto no encontrado");
     }
@@ -84,7 +104,7 @@ if (!mongoose.Types.ObjectId.isValid(productoId)) {
   }
 };
 
-// Eliminar 
+// Eliminar
 const deleteProducto = async (req, res) => {
   try {
     const productoEliminado = await Producto.findByIdAndDelete(req.params.id);

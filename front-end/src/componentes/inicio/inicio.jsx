@@ -16,7 +16,6 @@ const Inicio = function Inicio() {
   return (
     <>
 
-      {/* Carousel */}
       <Carousel className="my-4">
         <Carousel.Item>
           <img src={imagen1} className="d-block w-100" alt="Slide 1" />
@@ -29,10 +28,9 @@ const Inicio = function Inicio() {
         </Carousel.Item>
       </Carousel>
 
-      {/* Contact Form */}
       <Container className="my-5">
       <Row className="justify-content-center">
-      <Col md={6}> {/* Ajusta el tamaño de la columna según tus necesidades */}
+      <Col md={6}> 
         <h2 className="text-center mb-4">Contáctanos</h2>
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="email">
@@ -60,7 +58,6 @@ const Inicio = function Inicio() {
         </Row>
       </Container>
 
-      {/* Footer */}
       <footer className="bg-light text-center text-lg-start mt-5">
         <Container fluid className="p-4">
           <Row>

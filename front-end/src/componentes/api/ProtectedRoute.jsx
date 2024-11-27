@@ -5,7 +5,6 @@ const ProtectedRoute = ({ element }) => {
   const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
-    //alert('Sesión iniciada');
   }
 
   return isAuthenticated ? element : <Navigate to="/login" />;

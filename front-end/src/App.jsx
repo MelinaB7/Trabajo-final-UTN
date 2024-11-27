@@ -7,9 +7,10 @@ import LoginPage from "./componentes/api/login";
 import CargarProductosPage from './componentes/cargaProductos/cargaProductos';
 import ProductosPage from './componentes/inventario/inventario';
 import Inicio from './componentes/inicio/inicio';
-import Register from './componentes/api/register';
+import Register from './componentes/api/Register';
 import Menu from './componentes/menu/menu';
 import ProtectedRoute from './componentes/api/ProtectedRoute';
+
 function App() {
   const [count, setCount] = useState(0)
 

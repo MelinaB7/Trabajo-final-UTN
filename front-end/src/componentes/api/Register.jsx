@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import api from './api.jsx';
-import { Container, Form, Button } from 'react-bootstrap'; // Importamos los componentes de Bootstrap
+import { Container, Form, Button } from 'react-bootstrap'; 
 
 const Register = () => {
   const [username, setUsername] = useState('');

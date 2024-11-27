@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import api from './api';
 import { useAuth } from './authcontext'; 
-import { Container, Form, Button } from 'react-bootstrap'; // Importamos los componentes de Bootstrap
+import { Container, Form, Button } from 'react-bootstrap'; 
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -15,17 +15,14 @@ const Login = () => {
     try {
       await api.post("/usuarios/login", { username, password })
       .then(function (response) {
-        // handle success
         navigate('/cargar'); // Redirige a la ruta protegida
-        login(); // Llama a login después de un inicio de sesión exitoso
+        login(); 
         console.log(response);
       })
       .catch(function (error) {
-        // handle error
         console.log(error);
       })
       .finally(function () {
-        // always executed
       });
       
     } catch (error) {

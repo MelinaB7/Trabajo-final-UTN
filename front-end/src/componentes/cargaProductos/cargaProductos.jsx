@@ -8,25 +8,31 @@ const CargarProductosPage = function CargarProductosPage() {
   const [descripcion, setDescripcion] = useState('');
   const [precio, setPrecio] = useState('');
   const [cantidad, setCantidad] = useState ('');
+  const [imagen, setImagen] = useState(null);
   const navigate = useNavigate();
   
   const handleSubmit = (e) => {
     e.preventDefault();
-  axios
-    .post("http://localhost:3000/api/producto/",  {
-      nombre: nombre,
-      descripcion: descripcion,
-      precio: precio,
-      cantidad: cantidad
-    })
-    .then(function (response) {
-      console.log('Producto actualizado:', response);
-      // Aquí puedes manejar una notificación de éxito
-      navigate('/inventario'); // Redirige a la página de productos
-    })
-    .catch(function (error) {
-      console.error('Error al actualizar el producto:', error);
-    });
+    const formData = new FormData(); 
+    formData.append("nombre", nombre);
+    formData.append("descripcion", descripcion);
+    formData.append("precio", precio);
+    formData.append("cantidad", cantidad);
+    if (imagen) formData.append("imagen", imagen); 
+
+    axios
+      .post(process.env.REACT_APP_API_URL + "/api/producto/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", 
+        },
+      })
+      .then(function (response) {
+        console.log('Producto actualizado:', response);
+        navigate('/inventario'); 
+      })
+      .catch(function (error) {
+        console.error('Error al actualizar el producto:', error);
+      });
 
   };
 
@@ -71,6 +77,13 @@ const CargarProductosPage = function CargarProductosPage() {
                 placeholder="Cantidad" 
                 value={cantidad}
                 onChange={(e) => setCantidad(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="imagen">
+              <Form.Label>Imagen del producto</Form.Label>
+              <Form.Control 
+                type="file" 
+                onChange={(e) => setImagen(e.target.files[0])} 
               />
             </Form.Group>
             <div className="d-flex justify-content-end">

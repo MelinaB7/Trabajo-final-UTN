@@ -7,14 +7,15 @@ const ProductosPage = function ProductosPage() {
   const [productos, setProductos] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [productoActual, setProductoActual] = useState(null);
+  const [imagen, setImagen] = useState(null);
 
   useEffect(() => {
     handleCargarProductos();
   }, []);
-  //muestra todos los productos
+
   const handleCargarProductos = () => {
     axios
-      .get("http://localhost:3000/api/producto")
+      .get(process.env.REACT_APP_API_URL + "/api/producto")
       .then((response) => {
         setProductos(response.data);
       })
@@ -22,16 +23,16 @@ const ProductosPage = function ProductosPage() {
         console.error("Error fetching productos:", error);
       });
   };
-  //elimina un producto
+
   const handleEliminar = (id) => {
     axios
-      .delete("http://localhost:3000/api/producto/" + id,)
+      .delete(process.env.REACT_APP_API_URL + "/api/producto/" + id,)
       .then(function (response) {
-        // handle success
+      
         console.log(response);
       })
       .catch(function (error) {
-        // handle error
+ 
         console.log(error);
       })
       .finally(function () {
@@ -43,14 +44,21 @@ const ProductosPage = function ProductosPage() {
     setProductoActual(producto);
     setShowModal(true);
   };
+
   const handleGuardarCambios = () => {
     if (productoActual) {
+      const formData = new FormData(); 
+      formData.append("nombre", productoActual.nombre);
+      formData.append("descripcion", productoActual.descripcion);
+      formData.append("precio", productoActual.precio);
+      formData.append("cantidad", productoActual.cantidad);
+      if (imagen) formData.append("imagen", imagen); 
+
       axios
-        .put("http://localhost:3000/api/producto/" + productoActual._id, {
-          nombre: productoActual.nombre,
-          descripcion: productoActual.descripcion,
-          precio: productoActual.precio,
-          cantidad: productoActual.cantidad,
+        .put(process.env.REACT_APP_API_URL + "/api/producto/" + productoActual._id, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data", 
+          },
         })
         .then(function (response) {
           console.log(response);
@@ -80,6 +88,14 @@ const ProductosPage = function ProductosPage() {
         {productos.map((producto) => (
           <div className="col-md-6 col-lg-4 mb-4" key={producto.id}>
             <Card className="h-100">
+            {producto.imagen && (
+              <Card.Img
+                variant="top"
+                src={process.env.REACT_APP_API_URL + `/uploads/${producto.imagen}`}
+                alt={producto.nombre}
+                style={{ height: "200px", objectFit: "cover" }}
+              />
+            )}
               <Card.Header as="h5">{producto.nombre}</Card.Header>
               <Card.Body>
                 <Card.Text>{producto.descripcion}</Card.Text>
@@ -145,6 +161,13 @@ const ProductosPage = function ProductosPage() {
                 value={productoActual?.precio || ""}
                 onChange={handleChange}
                 step="0.01"
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Imagen del producto</Form.Label>
+              <Form.Control
+                type="file"
+                onChange={(e) => setImagen(e.target.files[0])} 
               />
             </Form.Group>
           </Form>
